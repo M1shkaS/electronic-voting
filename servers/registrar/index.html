@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Регистратор</title>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background: #eee;
+      }
+      .Myform {
+        width: 300px;
+        height: 225px;
+        background: #fff;
+        border-radius: 10px;
+        margin: 10% auto;
+        box-shadow: 2px 2px 4px 0px #000000;
+      }
+      .Myform h1 {
+        margin: 0;
+        background-color: #282830;
+        border-radius: 10px 10px 0 0;
+        color: #fff;
+        font-size: 14px;
+        padding: 20px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .inp {
+        padding: 20px;
+      }
+      .log {
+        border: 1px solid #dcdcdc;
+        padding: 12px 10px;
+        width: 93%;
+        border-radius: 5px;
+      }
+      .pass {
+        border: 1px solid #dcdcdc;
+        margin-top: 10px;
+        padding: 12px 10px;
+        width: 93%;
+        border-radius: 5px;
+      }
+      .btn {
+        background: #1dabb8;
+        border-radius: 5px;
+        color: #fff;
+        float: right;
+        font-weight: bold;
+        margin: 10px;
+        padding: 12px 20px;
+      }
+      .info {
+        width: 130px;
+        float: left;
+        padding-top: 20px;
+      }
+      .btn {
+        color: #ffffff;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+      }
+      .btn:hover {
+        background-color: #185c63;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Myform">
+      <h1>Добавить избирателя</h1>
+      <div class="inp">
+        <form name="regisrration">
+          <input
+            class="log"
+            type="text"
+            required
+            placeholder="Имя"
+            name="name"
+          />
+          <input
+            class="pass"
+            type="number"
+            required
+            placeholder="Паспорт"
+            name="passport"
+          />
+          <button class="btn" type="submit">Добавить</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      const form = document.querySelector("form"),
+        btnAddForm = document.querySelectorAll(".btn");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        const obj = {};
+        formData.forEach(function (val, key) {
+          obj[key] = val;
+        });
+
+        fetch("http://localhost:3000/addvoter", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(obj),
+        });
+        form.reset();
+      });
+    </script>
+  </body>
+</html>
