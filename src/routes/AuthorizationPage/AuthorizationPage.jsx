@@ -88,7 +88,7 @@ const AuthorizationPage = () => {
                         Приступить к голосованию
                      </button>
                   </div>
-                  <Link to='/watchtable' className="wrap-login100-form-btn link">
+                  <Link to='/watcher' className="wrap-login100-form-btn link">
                      <div className="login100-form-bgbtn"></div>
                      <button className="login100-form-btn"  type="submit">
                         Наблюдать
