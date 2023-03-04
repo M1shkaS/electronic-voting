@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {AESEncrypt, AESDecrypt} from "./crypto-helper/aesCryptography";
 import { RSASign,RSASignVerify } from "./crypto-helper/rsaCryptography";
 import { hash } from "./crypto-helper/hash";
+import { blind, blindReverse, createNumberFromText } from "./crypto-helper/blind";
+import { keyGeneratorRSA, keyGeneratorEC, maskingFactorGenerator } from "./crypto-helper/keyGeneration";
 import AuthorizationPage from "./routes/AuthorizationPage/AuthorizationPage";
 import VotingPage from "./routes/VotingPage/VotingPage";
 import Layout from "./components/Layout/Layout";
@@ -11,6 +13,57 @@ import './style/style.scss';
 import './style/util.scss';
 
 const App = () => {
+   // Регистратора ключи
+   let registratorKey = keyGeneratorRSA();
+
+   console.log(blind(registratorKey.pubKey));
+   // console.log(registratorKey);
+   // let numberKeyPubRegstr = +createNumberFromText(registratorKey.pubKey.e)
+
+//    // Избирателя ключи
+   // let {privKey, pubKey} = keyGeneratorRSA();
+//    let secretKey = keyGeneratorEC();
+
+//    let ciphertext = AESEncrypt("1", secretKey);
+//    console.log("Зашифрованная бюллетень: " + ciphertext);
+
+//    let maskingFactor = maskingFactorGenerator();
+// console.log(0);
+//    let blindEncrByVoter = blind(ciphertext, maskingFactor );
+//    console.log("Замаскированная зашифрованная бюллетень множителем избирателя: " + blindEncrByVoter.toString());
+//    console.log(0);
+//    let blindEncrByRegistrator = blind(blindEncrByVoter.toString(), numberKeyPubRegstr);
+//    console.log("Замаскированная зашифрованная бюллетень открытым ключом регистратора: " + blindEncrByRegistrator.toString());
+
+//    let heshBlindEncr = hash(blindEncrByRegistrator);
+//    console.log("Хеш замаскированного и зашифрованного бюллетеня: " + heshBlindEncr );
+
+//    let signHeshBlindEncr = RSASign(heshBlindEncr,privKey )
+//    console.log("Подпись избирателя: " + signHeshBlindEncr);
+
+//    // -----?Регистратор---------------
+//    console.log("Проверка ЭЦП: " +  RSASignVerify(signHeshBlindEncr, heshBlindEncr,pubKey ));
+
+//    let signBlindEncrByRegistrator = RSASign(blindEncrByRegistrator,registratorKey.privKey )
+//    console.log("Подпись регистратора: " + signBlindEncrByRegistrator);
+
+//    let b = createNumberFromText(signBlindEncrByRegistrator) ;
+//    console.log(b);
+//    let a = blindReverse(b, maskingFactor, true);
+// console.log(a);
+// console.log("Проверка ЭЦП: " +  RSASignVerify(a, heshBlindEncr,registratorKey.pubKey ));
+
+
+
+
+   // let unBlind = blindReverse(blindEncrByRegistrator, numberKeyPubRegstr);
+   // let unBlind2 = blindReverse(unBlind, maskingFactor);
+   // console.log(unBlind2 );
+   // console.log(unBlind2 === ciphertext);
+  
+   // let aesCipherText = AESEncrypt("1");
+   // blind(aesCipherText.ciphertext);
+
 // console.log(hash("1"));
    // let res2 = RSASign(1);
    // let res1 = RSASign(1);
@@ -26,9 +79,9 @@ const App = () => {
    // console.log(RSASign(1));
    // console.log(RSASign(1));
    // console.log(RSASign(1));
-   let {ciphertext, privKey } = AESEncrypt("1");
-   console.log(ciphertext);
-   console.log(AESDecrypt(ciphertext, privKey));
+   // let {ciphertext, privKey } = AESEncrypt("1");
+   // console.log(ciphertext);
+   // console.log(AESDecrypt(ciphertext, privKey));
   return(
   <div className="app">
    <Router>
