@@ -1,0 +1,31 @@
+.info-for-voter {
+  margin-top: 20px;
+  text-align: center;
+  &__header {
+    font-size: 30px;
+  }
+  &__descr {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  &__text {
+    resize: none;
+    text-align: center;
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+    font-size: 20px;
+    height: 30px;
+    padding: 2px 0;
+  }
+  &__text-key {
+    resize: none;
+    text-align: center;
+    width: 600px;
+    margin: 0 auto;
+    display: block;
+    font-size: 20px;
+    height: 30px;
+    padding: 2px 0;
+  }
+}

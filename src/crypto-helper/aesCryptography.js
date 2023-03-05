@@ -1,6 +1,6 @@
 import bigInt from "big-integer";
 import { KEYUTIL } from "jsrsasign";
-const CryptoJS = require("crypto-js");
+import CryptoJS from "crypto-js";
 
 const dynamicValue = "12/12/2021"; // Could use a date or something dynamic
 

@@ -14,24 +14,24 @@ import './style/util.scss';
 
 const App = () => {
    // Регистратора ключи
-   let registratorKey = keyGeneratorRSA();
-
-   console.log(blind(registratorKey.pubKey));
-   // console.log(registratorKey);
-   // let numberKeyPubRegstr = +createNumberFromText(registratorKey.pubKey.e)
+//    let registratorKey = keyGeneratorRSA();
+//    // console.log(registratorKey);
+//    let numberKeyPubRegstr = +createNumberFromText(registratorKey.pubKey.e)
 
 //    // Избирателя ключи
-   // let {privKey, pubKey} = keyGeneratorRSA();
+//    let {privKey, pubKey} = keyGeneratorRSA();
+//    console.log(pubKey);
+//    console.log(privKey);
 //    let secretKey = keyGeneratorEC();
 
 //    let ciphertext = AESEncrypt("1", secretKey);
 //    console.log("Зашифрованная бюллетень: " + ciphertext);
 
 //    let maskingFactor = maskingFactorGenerator();
-// console.log(0);
+// // console.log(0);
 //    let blindEncrByVoter = blind(ciphertext, maskingFactor );
 //    console.log("Замаскированная зашифрованная бюллетень множителем избирателя: " + blindEncrByVoter.toString());
-//    console.log(0);
+// //    console.log(0);
 //    let blindEncrByRegistrator = blind(blindEncrByVoter.toString(), numberKeyPubRegstr);
 //    console.log("Замаскированная зашифрованная бюллетень открытым ключом регистратора: " + blindEncrByRegistrator.toString());
 
@@ -43,6 +43,25 @@ const App = () => {
 
 //    // -----?Регистратор---------------
 //    console.log("Проверка ЭЦП: " +  RSASignVerify(signHeshBlindEncr, heshBlindEncr,pubKey ));
+
+//    let signBlindEncrByRegistrator = RSASign(blindEncrByRegistrator,registratorKey.privKey )
+//    console.log("Подпись регистратора: " + signBlindEncrByRegistrator);
+
+//    let resFirst = blindReverse(blindEncrByRegistrator, numberKeyPubRegstr);
+//    let resSecond = blindReverse(resFirst, maskingFactor);
+
+//    // console.log(resSecond);
+//    let h = hash(resSecond);
+//    let ver = RSASignVerify(signBlindEncrByRegistrator, h, registratorKey.pubKey  )
+//    console.log(ver);
+
+//    // Счётчик
+//    // Должен проперить эцп
+
+//    let golos = AESDecrypt(resSecond,  secretKey);
+//    console.log(golos);
+
+   //Мусор
 
 //    let signBlindEncrByRegistrator = RSASign(blindEncrByRegistrator,registratorKey.privKey )
 //    console.log("Подпись регистратора: " + signBlindEncrByRegistrator);

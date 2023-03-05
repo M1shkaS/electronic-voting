@@ -1,10 +1,16 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import { keyGeneratorRSA } from "../../src/crypto-helper/keyGeneration.js";
+import { hash } from "../../src/crypto-helper/hash.js";
+import {
+  RSASign,
+  RSASignVerify,
+} from "../../src/crypto-helper/rsaCryptography.js";
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 
 const jsonParser = bodyParser.json();
 const urlencodedParser = express.urlencoded({ extended: false });
@@ -28,10 +34,19 @@ let voters = [
   { name: "Дима", passport: "8", state: "registered" },
 ];
 
-let KDC = [];
+let keyRegistrar = {};
+
+let KDC = {
+  registrar: {},
+  voters: [],
+};
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
+});
+
+app.get("/getkey", (req, res) => {
+  res.send({ registrarKeyPub: KDC.registrar.pubKey });
 });
 
 app.post("/", urlencodedParser, function (req, res) {
@@ -69,9 +84,46 @@ app.post("/voters", jsonParser, (req, res) => {
   } else {
     res.send({ status: "nouser" });
   }
-  console.log(voters);
+});
+
+app.post("/postkeyvoters", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+
+  KDC.voters.push(req.body);
+  //   console.log(KDC);
+
+  res.send({ registrarKeyPub: KDC.registrar.pubKey.e });
+});
+
+app.post("/postencrvoting", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+
+  let { id, signEncrypt, blindEncrypt } = req.body;
+
+  let index = KDC.voters.findIndex((person) => person.id === id);
+
+  //   Проверка подписи избирателя, с помощью вычилсения хеша
+  if (index >= 0) {
+    let haskVot = hash(blindEncrypt);
+
+    let keyOpenVoter = KDC.voters[index].keyPub;
+
+    let signVerify = RSASignVerify(signEncrypt, haskVot, keyOpenVoter);
+
+    //Подписывает Регситратор
+    if (signVerify) {
+      let signByRegistrator = RSASign(blindEncrypt, keyRegistrar.privKey);
+
+      res.send({ signByRegistrator });
+    }
+  }
+
+  res.end();
 });
 
 app.listen(PORT, (error) => {
+  keyRegistrar = keyGeneratorRSA();
+  KDC.registrar.pubKey = keyRegistrar.pubKey;
+  //   console.log(KDC);
   error ? console.log(error) : console.log(`listening port ${PORT}`);
 });
