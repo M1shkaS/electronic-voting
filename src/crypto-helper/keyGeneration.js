@@ -2,9 +2,11 @@ import { KEYUTIL } from "jsrsasign";
 
 export function keyGeneratorRSA() {
   let rsaKeypair = KEYUTIL.generateKeypair("RSA", 1024);
+
   let privKey = KEYUTIL.getJWK(rsaKeypair.prvKeyObj);
   let pubKey = KEYUTIL.getJWK(rsaKeypair.pubKeyObj);
-
+  console.log(privKey);
+  console.log(pubKey);
   return { privKey, pubKey };
 }
 
@@ -25,9 +27,8 @@ export function createUniqueLabelCorrection() {
     word = "";
   for (let i = 0; i < 10; i++) {
     word += alphabet[Math.round(Math.random() * (alphabet.length - 1))];
+    word += maskingFactorGenerator(1, 20);
   }
-
-  word += maskingFactorGenerator(1, 10000);
 
   return word;
 }

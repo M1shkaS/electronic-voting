@@ -1,20 +1,7 @@
 import './TableData.scss';
 
-const TableData = ({data}) => {
-   // const data = [
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"},
-   //    {metka: "Ми", encrBul:"3123fdsf234df23f2f", signEnc: "3123fdsf234df23f2f"}
-   // ];
+const TableData = ({setActive,setModalInfoVotingDataActive,setInfoVotingData, data}) => {
+
    return(
       <table >
          
@@ -31,8 +18,15 @@ const TableData = ({data}) => {
             {data.map((data) =>{
                const classname = data.bulleten === "Да" ? "active" :  data.bulleten === "Нет"? "passive" : "empty"
                return(
-               <tr className={classname} key={data.uniqueLabelCorrection}>
-                  <td>{data.uniqueLabelCorrection}</td>
+               <tr className={"string " + classname} key={data.uniqueLabelCorrection}
+               onClick={(() =>{
+                  setActive(true)
+                  setModalInfoVotingDataActive(true)
+                  setInfoVotingData(data);
+                 
+               })}
+               >
+                  <td><span>{data.uniqueLabelCorrection}</span> </td>
                   <td><span>{data.encrBulletin}</span> </td>
                   <td><span>{data.signRegistrator}</span> </td>
                   <td><span>{data.secretVotingKey ? data.secretVotingKey:"Данных нет"}</span> </td>

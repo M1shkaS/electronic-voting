@@ -9,6 +9,11 @@
   color: rgb(241, 241, 241);
   padding: 15px;
   border-radius: 10px;
+  transition: all 0.5s;
+  &:hover {
+    transform: scale(1.1);
+    background-color: #c38ff3;
+  }
 }
 .info-btn {
   padding-left: 15px;

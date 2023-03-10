@@ -11,21 +11,30 @@
   &__text {
     resize: none;
     text-align: center;
-    width: 200px;
+    width: 350px;
     margin: 0 auto;
-    display: block;
     font-size: 20px;
     height: 30px;
     padding: 2px 0;
   }
+
   &__text-key {
     resize: none;
     text-align: center;
     width: 600px;
     margin: 0 auto;
-    display: block;
     font-size: 20px;
     height: 30px;
     padding: 2px 0;
+  }
+  &__block {
+    position: relative;
+  }
+  button {
+    margin-left: 10px;
+    img {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

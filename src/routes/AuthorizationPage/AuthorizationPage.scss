@@ -272,6 +272,11 @@
   padding: 0 15px;
   width: 100%;
   height: 50px;
+  transition: all 0.5s;
+  &:hover {
+    transform: scale(1.1);
+    background-color: #c38ff3;
+  }
 }
 
 .wrap-login100-form-btn:hover .login100-form-bgbtn {

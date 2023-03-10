@@ -1,8 +1,11 @@
 import './Modal.scss';
 
-const Modal = ({active, setActive, children}) => {
+const Modal = ({active, setActive,setModalInfoVotingDataActive, children}) => {
    return(
-      <div className={active ? "modal active": "modal"} onClick={() => setActive(false)}>
+      <div className={active ? "modal active": "modal"} onClick={() => { 
+         setActive(false)
+         setModalInfoVotingDataActive(false)
+         }}>
          <div className="modal__content" onClick={e => e.stopPropagation()}>
             {children}
          </div>
