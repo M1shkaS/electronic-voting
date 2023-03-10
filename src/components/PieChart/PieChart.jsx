@@ -1,10 +1,23 @@
 import { Chart } from "react-google-charts";
 
-const PieChart = () => {
-   const data = [
+const PieChart = ({data}) => {
+   console.log(data);
+   let counterYes = 0, counterNo = 0, counerNoVot = 0;
+   data.forEach(element => {
+      let {bulleten} = element;
+      if(bulleten === "Да"){
+         counterYes++
+      }else if(bulleten === "Нет"){
+         counterNo++ 
+      }else{
+         counerNoVot++
+      }
+   });
+   const data2 = [
       ["Task", "Hours per Day"],
-      ["Да", 11],
-      ["Нет", 20],
+      ["За", counterYes],
+      ["Против", counterNo],
+      ["Не отправили данные", counerNoVot],
     ];
    const options = {
       title: "Голосование за поправки в коституцию",
@@ -12,7 +25,7 @@ const PieChart = () => {
  return (
    <Chart
    chartType="PieChart"
-   data={data}
+   data={data2}
    options={options}
    width={"100%"}
    height={"400px"}

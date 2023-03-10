@@ -3,9 +3,11 @@ table {
   border-collapse: collapse;
   overflow: auto;
   table-layout: fixed;
+  text-align: center;
 }
 table td {
   padding: 12px 16px;
+
   span {
     display: inline-block;
     overflow: auto;
@@ -33,4 +35,16 @@ table tr {
 }
 table tbody tr:hover {
   background: #e8f6ff;
+}
+table tbody tr.active {
+  background: rgb(87, 125, 201);
+  color: white;
+}
+table tbody tr.passive {
+  background: rgb(220, 57, 18);
+  color: white;
+}
+table tbody tr.empty {
+  background: rgb(255, 153, 0);
+  color: white;
 }

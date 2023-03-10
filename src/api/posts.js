@@ -52,4 +52,13 @@ export default {
     const dataResponse = await response.data.signByRegistrator;
     return dataResponse;
   },
+  async postVotingKey(uniqueLabelCorrection, secretVotingKey) {
+    const response = await axios.post(`http://localhost:3002/postvotingkey`, {
+      uniqueLabelCorrection,
+      secretVotingKey,
+    });
+
+    const dataResponse = await response.data;
+    return dataResponse;
+  },
 };

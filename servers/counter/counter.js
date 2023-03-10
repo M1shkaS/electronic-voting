@@ -4,6 +4,7 @@ import cors from "cors";
 import request from "request";
 import { keyGeneratorRSA } from "../../src/crypto-helper/keyGeneration.js";
 import { RSASignVerify } from "../../src/crypto-helper/rsaCryptography.js";
+import { AESDecrypt } from "../../src/crypto-helper/aesCryptography.js";
 
 const url = "http://localhost:3001/getkey";
 
@@ -32,7 +33,7 @@ app.post("/", urlencodedParser, function (req, res) {
 });
 
 app.get("/getdatatable", (req, res) => {
-  console.log(table);
+  //   console.log(table);
   res.send(table);
 });
 
@@ -51,12 +52,40 @@ app.post("/postencr", jsonParser, (req, res) => {
   );
   //Если подпись регистратора верна
   if (signVerify) {
-    table.push({ uniqueLabelCorrection, encrBulletin, signRegistrator });
+    const newVot = {
+      uniqueLabelCorrection,
+      encrBulletin,
+      signRegistrator,
+      secretVotingKey: "",
+      bulleten: "",
+    };
+    table.push(newVot);
 
     res.end();
   }
-
+  console.log(table);
   res.end();
+});
+
+app.post("/postvotingkey", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+  let { uniqueLabelCorrection, secretVotingKey } = req.body;
+
+  let index = table.findIndex(
+    (person) => person.uniqueLabelCorrection === uniqueLabelCorrection
+  );
+  if (index >= 0) {
+    let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
+    console.log(bullenetin);
+    table[index].secretVotingKey = secretVotingKey;
+    if (bullenetin == "1") {
+      table[index].bulleten = "Да";
+    } else {
+      table[index].bulleten = "Нет";
+    }
+  }
+  //   console.log(index);
+  res.send(table);
 });
 
 app.listen(PORT, (error) => {

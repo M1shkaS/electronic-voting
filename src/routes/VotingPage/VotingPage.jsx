@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {  toJS  } from "mobx";
 import { keyGeneratorRSA, keyGeneratorEC, maskingFactorGenerator, createUniqueLabelCorrection } from '../../crypto-helper/keyGeneration';
-import { AESDecrypt, AESEncrypt } from '../../crypto-helper/aesCryptography';
+import {  AESEncrypt } from '../../crypto-helper/aesCryptography';
 import { blind, createNumberFromText, blindReverse } from '../../crypto-helper/blind';
 import { RSASign } from '../../crypto-helper/rsaCryptography';
 import { hash } from '../../crypto-helper/hash';
@@ -22,7 +22,6 @@ const VotingPage = () => {
    useEffect( () => {
       if(localStorage.getItem('passport')){
         let valuePass = localStorage.getItem('passport');
-      //   setUniqueLabelCorrection("");
         loginPerson(valuePass)
       }else{
          setAuth("nouser")
@@ -36,6 +35,7 @@ const VotingPage = () => {
          //Генерируем ключи
          let {privKey, pubKey} = keyGeneratorRSA();
          let secretKey = keyGeneratorEC();
+         console.log(secretKey);
          keyStoreVoter.postKeyVoter({privKey, pubKey}, secretKey);
 
          //Достём из kdc ключи регистратора и кладём свой открытый ключ туда
