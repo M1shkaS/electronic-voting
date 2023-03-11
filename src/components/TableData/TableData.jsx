@@ -1,7 +1,9 @@
+import { observer } from 'mobx-react-lite';
+import tableDataStore from '../../stores/TableDataStore';
 import './TableData.scss';
 
 const TableData = ({setActive,setModalInfoVotingDataActive,setInfoVotingData, data}) => {
-
+const {tablData} = tableDataStore;
    return(
       <table >
          
@@ -15,7 +17,7 @@ const TableData = ({setActive,setModalInfoVotingDataActive,setInfoVotingData, da
             </tr>
          </thead>
          <tbody>
-            {data.map((data) =>{
+            {tablData.map((data) =>{
                const classname = data.bulleten === "Да" ? "active" :  data.bulleten === "Нет"? "passive" : "empty"
                return(
                <tr className={"string " + classname} key={data.uniqueLabelCorrection}
@@ -40,4 +42,4 @@ const TableData = ({setActive,setModalInfoVotingDataActive,setInfoVotingData, da
    )
 }
 
-export default TableData;
+export default observer(TableData) ;

@@ -1,9 +1,11 @@
+import { observer } from "mobx-react-lite";
 import { Chart } from "react-google-charts";
+import tableDataStore from "../../stores/TableDataStore";
 
 const PieChart = ({data}) => {
-   console.log(data);
+   const {tablData} = tableDataStore
    let counterYes = 0, counterNo = 0, counerNoVot = 0;
-   data.forEach(element => {
+   tablData.forEach(element => {
       let {bulleten} = element;
       if(bulleten === "Да"){
          counterYes++
@@ -32,4 +34,4 @@ const PieChart = ({data}) => {
  />
  )
 };
-export default PieChart;
+export default observer(PieChart);

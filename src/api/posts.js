@@ -61,4 +61,17 @@ export default {
     const dataResponse = await response.data;
     return dataResponse;
   },
+  //   async postLogUser(log) {
+  //     const response = await axios.post(`http://localhost:3002/postloguser`, {
+  //       log,
+  //     });
+
+  //     const dataResponse = await response.data;
+  //     return dataResponse;
+  //   },
+  //   async getLogUser() {
+  //     const response = await axios.get(`http://localhost:3002/getloguser`);
+  //     const dataResponse = await response.data;
+  //     return dataResponse;
+  //   },
 };

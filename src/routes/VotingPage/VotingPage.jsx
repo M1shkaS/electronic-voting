@@ -9,6 +9,7 @@ import keyStoreVoter from '../../stores/KeyStore';
 import VotingForm from '../../components/VotingForm/VotingForm';
 import ThanksMessage from '../../components/ThanksMessage/ThanksMessage';
 import InfoForVoter from '../../components/InfoForVoter/InfoForVoter';
+import logStore from '../../stores/LogStore';
 import api from '../../api';
 import { Navigate} from "react-router-dom";
 import './VotingPage.scss';
@@ -35,7 +36,19 @@ const VotingPage = () => {
          //Генерируем ключи
          let {privKey, pubKey} = keyGeneratorRSA();
          let secretKey = keyGeneratorEC();
-         console.log(secretKey);
+         // logStore.addUserTextLog(`Пользователь создал пару ключей: (n, d) = ${privKey.n}, ${privKey.d}  (n, e) = ${pubKey.n}, ${pubKey.e}`)
+         logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Пользователь создал пару ключей:</span><br/>
+            (n, d) =  {privKey.n}, {privKey.d} <br/>
+            (n, e) = {pubKey.n}, {pubKey.e}
+         </div>)
+
+         logStore.addUserTextLog(
+            <div className="logUser__text" >
+              <span>Пользователь создал секретный ключ для симметричного шифрования:</span><br/>
+              {secretKey}
+            </div>)
          keyStoreVoter.postKeyVoter({privKey, pubKey}, secretKey);
 
          //Достём из kdc ключи регистратора и кладём свой открытый ключ туда
@@ -43,10 +56,20 @@ const VotingPage = () => {
 
          keyStoreVoter.postRegistrarKeyPub(+createNumberFromText(registrarKeyOpen));
 
+         logStore.addUserTextLog(
+            <div className="logUser__text" >
+              <span>Пользователь получает открытый ключ регситратора:</span><br/>
+              {registrarKeyOpen}
+            </div>)
          // Генерируем случайный множитель
          let maskingFactor = maskingFactorGenerator();
          keyStoreVoter.postMaskingFactor(maskingFactor);
-
+         // logStore.addUserTextLog(`Пользователь сгенерировал маскирующий множитель:  ${maskingFactor}`)
+         logStore.addUserTextLog(
+            <div className="logUser__text" >
+              <span>Пользователь сгенерировал случайный маскирующий множитель:</span><br/>
+              {maskingFactor}
+            </div>)
       }
    }
 
@@ -58,38 +81,68 @@ const VotingPage = () => {
       let secretKey = toJS(keyStoreVoter.keys.secrKey);
       // Шифруем
       let encryptVoting = AESEncrypt(value, secretKey);
-      console.log(encryptVoting);
+      logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Зашифрованная бюллетень:</span><br/>
+           {encryptVoting}
+         </div>)
+      // console.log(encryptVoting);
+
       // Cкрываем с помощью множиеля и ключа регистратора
       let maskingFactor = toJS(keyStoreVoter.maskingFactor);
 
       let blindEncrByVoter = blind(encryptVoting, maskingFactor );
-      console.log("Замаскированная зашифрованная бюллетень множителем избирателя: " + blindEncrByVoter.toString());
+      // console.log("Замаскированная зашифрованная бюллетень множителем избирателя: " + blindEncrByVoter.toString());
 
       let numberKeyPubRegstr = toJS(keyStoreVoter.registrarKeyPub);
 
       let blindEncrByRegistrator = toJS(blind(blindEncrByVoter.toString(), numberKeyPubRegstr));
-      console.log("Замаскированная зашифрованная бюллетень открытым ключом регистратора: " + blindEncrByRegistrator.toString());
+      // console.log("Замаскированная зашифрованная бюллетень открытым ключом регистратора: " + blindEncrByRegistrator.toString());
+
+      logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Замаскированная зашифрованная бюллетень открытым ключом регистратора и множителем пользователя:</span><br/>
+           {blindEncrByRegistrator.toString()}
+         </div>)
 
       let heshBlindEncr = hash( blindEncrByRegistrator);
-
-      console.log("Хеш замаскированного и зашифрованного бюллетеня: " + heshBlindEncr );
+      // console.log("Хеш замаскированного и зашифрованного бюллетеня: " + heshBlindEncr );
       
       let privKey = toJS(keyStoreVoter.keys.rsaKey.privKey);
       let signHeshBlindEncr = RSASign(heshBlindEncr, privKey )
-      console.log("Подпись избирателя: " + signHeshBlindEncr);
+      // console.log("Подпись избирателя: " + signHeshBlindEncr);
+      logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Подпись пользователя замаскированного бюллетеня:</span><br/>
+           {signHeshBlindEncr}
+         </div>)
 
       let valuePass = localStorage.getItem('passport');
       let signRegistrator =  await api.posts.postEncryptMaskText(valuePass,signHeshBlindEncr,blindEncrByRegistrator);
-      
-      console.log("Подпись регистратора: " + signRegistrator);
+      // console.log("Подпись регистратора: " + signRegistrator);
+
+      logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Пользователь получил подпись регистратора:</span><br/>
+           {signRegistrator}
+         </div>)
 
       let blindReverseFirst = blindReverse(blindEncrByRegistrator, numberKeyPubRegstr);
       let blindReverseSecond = blindReverse(blindReverseFirst, maskingFactor);
-      console.log("Снятие маскирующих множителей: " + blindReverseSecond);
+      // console.log("Снятие маскирующих множителей: " + blindReverseSecond);
+      logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП:</span><br/>
+           {blindReverseSecond}
+         </div>)
 
       let uniqueLabelCorrection = createUniqueLabelCorrection()
-      console.log("Уникальная метка: " + uniqueLabelCorrection);
-    
+      // console.log("Уникальная метка: " + uniqueLabelCorrection);
+          logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Пользователь сгенерировал уникальную метку:</span><br/>
+           {uniqueLabelCorrection}
+         </div>)
 
        await api.posts.postEncryptCounter(uniqueLabelCorrection, encryptVoting,signRegistrator, blindEncrByRegistrator );
 

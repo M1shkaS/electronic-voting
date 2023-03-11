@@ -27,9 +27,11 @@ let keyRegistrar = {};
 
 let table = [];
 
+// let userLog = [];
+
 app.post("/", urlencodedParser, function (req, res) {
   if (!req.body) return response.sendStatus(400);
-  //   res.end();
+  res.end();
 });
 
 app.get("/getdatatable", (req, res) => {
@@ -63,7 +65,6 @@ app.post("/postencr", jsonParser, (req, res) => {
 
     res.end();
   }
-  console.log(table);
   res.end();
 });
 
@@ -87,7 +88,18 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
   //   console.log(index);
   res.send(table);
 });
+// app.post("/postloguser", jsonParser, (req, res) => {
+//   if (!req.body) return res.sendStatus(400);
 
+//   userLog.push(req.body.log);
+//   console.log(userLog);
+//   res.end();
+// });
+// app.get("/getloguser", jsonParser, (req, res) => {
+//   if (!req.body) return res.sendStatus(400);
+//   console.log(32131);
+//   res.send(userLog);
+// });
 app.listen(PORT, (error) => {
   error ? console.log(error) : console.log(`listening port ${PORT}`);
   request(

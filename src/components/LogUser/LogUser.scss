@@ -14,7 +14,12 @@
     text-align: center;
   }
   &__text {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     line-height: 20px;
+    font-size: 14px;
+    span {
+      font-size: 16px;
+      font-weight: 700;
+    }
   }
 }

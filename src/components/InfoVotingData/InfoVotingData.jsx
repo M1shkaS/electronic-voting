@@ -2,7 +2,7 @@ import './InfoVotingData.scss';
 
 const InfoVotingData = ({infoVotingData}) => {
    let {uniqueLabelCorrection, encrBulletin, signRegistrator, secretVotingKey, bulleten} = infoVotingData
-   let strSign = signRegistrator.length > 180 ? signRegistrator.slice(0, 45)+"...":signRegistrator
+   let strSign = signRegistrator.length > 125 ? signRegistrator.slice(0, 50)+"...":signRegistrator
    return(
       <div className="info-for-voting-data">
          <h3>Метка избирателя</h3>

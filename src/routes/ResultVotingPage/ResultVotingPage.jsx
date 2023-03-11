@@ -4,8 +4,9 @@ import FormPostData from '../../components/FormPostData/FormPostData';
 import TableData from '../../components/TableData/TableData';
 import Modal from '../../components/Modal/Modal';
 import Timer from '../../components/Timer/Timer';
+import sad from './sad.svg'
+import tableDataStore from '../../stores/TableDataStore';
 import InfoVotingData from '../../components/InfoVotingData/InfoVotingData';
-
 import api from '../../api';
 
 import './ResultVotingPage.scss';
@@ -23,6 +24,10 @@ const ResultVotingPage = () => {
 
    const getData =  async() => {
       let res = await api.posts.getDataTable();
+      if(res.length !== 0 ){
+         tableDataStore.addTableData(res)
+      }
+     
       setData(res);
    }
 
@@ -37,12 +42,17 @@ const ResultVotingPage = () => {
          <button className='btn-open-modal' onClick={() => setModalActive(true)}>Отправить данные</button>
       </div>
       {data.length !== 0 ?
-        <TableData data={data} setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
+        <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
         null
       }
    </div>
-   :
+   :<>
       <div className="empty-data">Данных пока нет</div>
+      <img className='sad' src={sad} alt="sad" />
+   </>
+  
+   
+   
 }
 {
    modalActive ?

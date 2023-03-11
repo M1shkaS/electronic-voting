@@ -1,9 +1,15 @@
 import { Formik, Field, Form } from 'formik';
 import api from '../../api';
-
+import logStore from '../../stores/LogStore';
+import tableDataStore from '../../stores/TableDataStore';
 import './FormPostData.scss';
 
 const FormPostData = ({setActive}) => {
+
+   const postData =  async(uniqueLabelCorrection, secretVotingKey) => {
+      let res = await api.posts.postVotingKey(uniqueLabelCorrection, secretVotingKey)
+      tableDataStore.addTableData(res)
+   }
    return(
       <>
       <Formik
@@ -12,7 +18,13 @@ const FormPostData = ({setActive}) => {
             secretVotingKey:''
          }}
          onSubmit={({uniqueLabelCorrection, secretVotingKey},  {resetForm}) => {
-          api.posts.postVotingKey(uniqueLabelCorrection, secretVotingKey)
+            postData(uniqueLabelCorrection, secretVotingKey)
+          logStore.addUserTextLog(
+            <div className="logUser__text" >
+              <span>Пользователь отправляет свою метку и секретный ключ для расшифрования:</span><br/>
+              {uniqueLabelCorrection} <br />
+              {secretVotingKey} 
+            </div>)
           setActive(false);
            resetForm();
          }}

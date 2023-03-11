@@ -8,7 +8,6 @@ return(
      picked: '',
    }}
    onSubmit={ (values) => {
-      console.log(1);
       setValueVotingByPerson(values.picked)
    }}
  >
