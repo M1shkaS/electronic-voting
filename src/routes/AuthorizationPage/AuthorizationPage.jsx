@@ -7,6 +7,7 @@ import { Navigate, Link } from "react-router-dom";
 
 import { useState } from 'react';
 
+import logStore from '../../stores/LogStore';
 import './AuthorizationPage.scss';
 
 import api from '../../api';
@@ -18,7 +19,7 @@ const AuthorizationPage = () => {
    const [auth, setAuth] = useState(false);
    const [voting, setVoting] = useState(false);
    const [errorMessageByServer, setErrorMessageByServer] = useState("");
-
+ 
    let classNameInputPass ="input100" ;
    if(valuePassp.length !== 0){
       classNameInputPass += ' has-val';
@@ -33,6 +34,16 @@ const AuthorizationPage = () => {
          if(res === "registered"){
             setAuth(true);
             localStorage.setItem('passport', valuePassp);
+            logStore.addAppTextLog(
+               <div className="logUser__text" >
+               <span>Рагистратор опубликовал список правомочных избирателей</span>
+               </div>
+            )
+            logStore.addAppTextLog(
+               <div className="logUser__text" >
+                 <span>Регистратор сгенерировал открытый ключ(поместил его в kdc) и закрытый ключ </span>
+               </div>
+            )
          }else{
             setVoting(true);
             setValuePassp("");

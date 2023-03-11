@@ -44,23 +44,38 @@ const VotingPage = () => {
             (n, e) = {pubKey.n}, {pubKey.e}
          </div>)
 
+
+         logStore.addAppTextLog(<div className="logUser__text" >
+         <span>Пользователь создал пару ключей:</span><br/>
+            (n, d) =  {privKey.n}, {privKey.d} <br/>
+            (n, e) = {pubKey.n}, {pubKey.e}
+         </div>)
+
          logStore.addUserTextLog(
             <div className="logUser__text" >
-              <span>Пользователь создал секретный ключ для симметричного шифрования:</span><br/>
+              <span>Пользователь сгенерировал секретный ключ для симметричного шифрования:</span><br/>
               {secretKey}
             </div>)
+         
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+              <span>Пользователь сгенерировал секретный ключ для симметричного шифрования:</span><br/>
+              {secretKey}
+            </div>
+         )
          keyStoreVoter.postKeyVoter({privKey, pubKey}, secretKey);
 
          //Достём из kdc ключи регистратора и кладём свой открытый ключ туда
          let registrarKeyOpen = await api.posts.postKey(valuePass, pubKey);
-
          keyStoreVoter.postRegistrarKeyPub(+createNumberFromText(registrarKeyOpen));
-
          logStore.addUserTextLog(
             <div className="logUser__text" >
-              <span>Пользователь получает открытый ключ регситратора:</span><br/>
+              <span>Пользователь получил из kdc открытый ключ регситратора:</span><br/>
               {registrarKeyOpen}
-            </div>)
+            </div>
+         )
+
+
          // Генерируем случайный множитель
          let maskingFactor = maskingFactorGenerator();
          keyStoreVoter.postMaskingFactor(maskingFactor);
@@ -70,6 +85,13 @@ const VotingPage = () => {
               <span>Пользователь сгенерировал случайный маскирующий множитель:</span><br/>
               {maskingFactor}
             </div>)
+
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Пользователь сгенерировал случайный маскирующий множитель:</span><br/>
+               {maskingFactor}
+            </div>
+         )
       }
    }
 
@@ -86,6 +108,12 @@ const VotingPage = () => {
            <span>Зашифрованная бюллетень:</span><br/>
            {encryptVoting}
          </div>)
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Зашифрованная бюллетень:</span><br/>
+            {encryptVoting}
+         </div>
+      )
       // console.log(encryptVoting);
 
       // Cкрываем с помощью множиеля и ключа регистратора
@@ -104,6 +132,12 @@ const VotingPage = () => {
            <span>Замаскированная зашифрованная бюллетень открытым ключом регистратора и множителем пользователя:</span><br/>
            {blindEncrByRegistrator.toString()}
          </div>)
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Замаскированная зашифрованная бюллетень открытым ключом регистратора и множителем пользователя:</span><br/>
+            {blindEncrByRegistrator.toString()}
+         </div>
+      )
 
       let heshBlindEncr = hash( blindEncrByRegistrator);
       // console.log("Хеш замаскированного и зашифрованного бюллетеня: " + heshBlindEncr );
@@ -113,9 +147,15 @@ const VotingPage = () => {
       // console.log("Подпись избирателя: " + signHeshBlindEncr);
       logStore.addUserTextLog(
          <div className="logUser__text" >
-           <span>Подпись пользователя замаскированного бюллетеня:</span><br/>
+           <span>Пользователь подписывает свою замаскированную бюллетень:</span><br/>
            {signHeshBlindEncr}
          </div>)
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Пользователь подписывает свою замаскированную бюллетень:</span><br/>
+            {signHeshBlindEncr.toString()}
+         </div>
+      )
 
       let valuePass = localStorage.getItem('passport');
       let signRegistrator =  await api.posts.postEncryptMaskText(valuePass,signHeshBlindEncr,blindEncrByRegistrator);
@@ -126,16 +166,38 @@ const VotingPage = () => {
            <span>Пользователь получил подпись регистратора:</span><br/>
            {signRegistrator}
          </div>)
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Регистратор проверил подпись пользователя: верная</span>
+         </div>
+      )
+      
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Регистратор подписал скрытый зашифрованный бюллетень и отправил пользователю</span>
+         </div>
+      )
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Пользователь получил подпись регистратора:</span><br/>
+            {signRegistrator}
+         </div>
+      )
 
       let blindReverseFirst = blindReverse(blindEncrByRegistrator, numberKeyPubRegstr);
       let blindReverseSecond = blindReverse(blindReverseFirst, maskingFactor);
       // console.log("Снятие маскирующих множителей: " + blindReverseSecond);
       logStore.addUserTextLog(
          <div className="logUser__text" >
-           <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП:</span><br/>
+           <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП регистратора:</span><br/>
            {blindReverseSecond}
          </div>)
-
+      logStore.addAppTextLog(
+         <div className="logUser__text" >
+            <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП регистратора:</span><br/>
+            {blindReverseSecond}
+         </div>
+      )
       let uniqueLabelCorrection = createUniqueLabelCorrection()
       // console.log("Уникальная метка: " + uniqueLabelCorrection);
           logStore.addUserTextLog(
@@ -143,9 +205,32 @@ const VotingPage = () => {
            <span>Пользователь сгенерировал уникальную метку:</span><br/>
            {uniqueLabelCorrection}
          </div>)
-
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Пользователь сгенерировал уникальную метку:</span><br/>
+               {uniqueLabelCorrection}
+            </div>
+         )
        await api.posts.postEncryptCounter(uniqueLabelCorrection, encryptVoting,signRegistrator, blindEncrByRegistrator );
-
+       logStore.addUserTextLog(
+         <div className="logUser__text" >
+           <span>Пользователь отправил счётчику свою метку, зашифрованный бюллетень и ЭЦП регистратора</span>
+         </div>)
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Пользователь отправил счётчику свою метку, зашифрованный бюллетень и ЭЦП регистратора</span>
+            </div>
+         )
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Счётчик получил от пользователя метку, зашифрованный бюллетень и ЭЦП регистратора</span>
+            </div>
+         )
+         logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Счётчик проверил ЭЦП регистратора: верная</span>
+            </div>
+         )
        setUniqueLabelCorrection(uniqueLabelCorrection);
       setValueVoting(true);
    }
