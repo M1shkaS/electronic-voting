@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { keyGeneratorRSA } from "../../src/crypto-helper/keyGeneration.js";
@@ -11,7 +13,7 @@ import {
 const app = express();
 
 const PORT = 3001;
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const jsonParser = bodyParser.json();
 const urlencodedParser = express.urlencoded({ extended: false });
 
