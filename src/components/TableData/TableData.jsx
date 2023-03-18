@@ -18,7 +18,8 @@ const {tablData} = tableDataStore;
          </thead>
          <tbody>
             {tablData.map((data) =>{
-               const classname = data.bulleten === "Да" ? "active" :  data.bulleten === "Нет"? "passive" : "empty"
+     
+               const classname = data.bulleten.length !== 0 ? "active" : "empty"
                return(
                <tr className={"string " + classname} key={data.uniqueLabelCorrection}
                onClick={(() =>{

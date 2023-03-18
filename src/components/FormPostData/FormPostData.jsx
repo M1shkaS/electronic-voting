@@ -9,6 +9,7 @@ const FormPostData = ({setActive}) => {
    const postData =  async(uniqueLabelCorrection, secretVotingKey) => {
       let res = await api.posts.postVotingKey(uniqueLabelCorrection, secretVotingKey)
       tableDataStore.addTableData(res)
+
    }
    return(
       <>

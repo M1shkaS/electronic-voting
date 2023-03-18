@@ -27,7 +27,7 @@ const ResultVotingPage = () => {
       if(res.length !== 0 ){
          tableDataStore.addTableData(res)
       }
-     
+     console.log(res);
       setData(res);
    }
 

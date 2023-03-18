@@ -79,11 +79,12 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
     let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
     console.log(bullenetin);
     table[index].secretVotingKey = secretVotingKey;
-    if (bullenetin == "1") {
-      table[index].bulleten = "Да";
-    } else {
-      table[index].bulleten = "Нет";
-    }
+    table[index].bulleten = bullenetin;
+    //  if (bullenetin == "1") {
+    //    table[index].bulleten = "Да";
+    //  } else {
+    //    table[index].bulleten = "Нет";
+    //  }
   }
   //   console.log(index);
   res.send(table);
