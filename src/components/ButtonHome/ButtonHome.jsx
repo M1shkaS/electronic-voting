@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import home from '../../img/home.png'
+import home from '../../recourses/img/home.png'
 import "./ButtonHome.scss";
 const ButtonHome = () => {
   return (

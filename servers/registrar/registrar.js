@@ -49,8 +49,8 @@ let timeVot = {
   endYear: 2023,
   endMonth: 4,
   endDay: 7,
-  endH: 14,
-  endM: 14,
+  endH: 16,
+  endM: 8,
 };
 
 app.get("/", (req, res) => {

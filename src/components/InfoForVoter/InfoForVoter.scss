@@ -1,12 +1,25 @@
 .info-for-voter {
   margin-top: 20px;
   text-align: center;
+  background-color: white;
+  padding: 10px 20px 10px 20px;
+  border-radius: 10px;
+  width: 80%;
   &__header {
     font-size: 30px;
   }
   &__descr {
     display: inline-block;
     margin-bottom: 10px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  &__block {
+    border-bottom: 4px solid #a64bf4;
+    padding: 10px 0 10px 0;
+  }
+  &__block:last-child {
+    border-bottom: none;
   }
   &__text {
     resize: none;
@@ -16,6 +29,8 @@
     font-size: 20px;
     height: 30px;
     padding: 2px 0;
+    background-color: rgb(240, 238, 238);
+    border-radius: 10px;
   }
 
   &__text-key {
@@ -26,6 +41,8 @@
     font-size: 20px;
     height: 30px;
     padding: 2px 0;
+    background-color: rgb(240, 238, 238);
+    border-radius: 10px;
   }
   &__block {
     position: relative;
