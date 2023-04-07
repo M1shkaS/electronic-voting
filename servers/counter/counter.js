@@ -2,11 +2,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import request from "request";
-import { keyGeneratorRSA } from "../../src/crypto-helper/keyGeneration.js";
-import { RSASignVerify } from "../../src/crypto-helper/rsaCryptography.js";
-import { AESDecrypt } from "../../src/crypto-helper/aesCryptography.js";
+import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
+import { RSASignVerify } from "../../src/services/rsaSign.js";
+import { AESDecrypt } from "../../src/services/aesCryptography.js";
 
 const url = "http://localhost:3001/getkey";
+const urlTime = "http://localhost:3001/gettime";
 
 const app = express();
 
@@ -27,7 +28,18 @@ let keyRegistrar = {};
 
 let table = [];
 
-// let userLog = [];
+let timeVot = {
+  startYear: null,
+  startMonth: null,
+  startDay: null,
+  startH: null,
+  startM: null,
+  endYear: null,
+  endMonth: null,
+  endDay: null,
+  endH: null,
+  endM: null,
+};
 
 app.post("/", urlencodedParser, function (req, res) {
   if (!req.body) return response.sendStatus(400);
@@ -35,8 +47,20 @@ app.post("/", urlencodedParser, function (req, res) {
 });
 
 app.get("/getdatatable", (req, res) => {
-  //   console.log(table);
-  res.send(table);
+  //Проверка времени
+  let timeRes = isValid(
+    new Date(),
+    timeVot.startH,
+    timeVot.startM,
+    timeVot.endH,
+    timeVot.endM
+  );
+
+  if (!timeRes) {
+    res.send(table);
+  } else {
+    res.send({ message: "timeTicking", timeVot });
+  }
 });
 
 app.post("/postencr", jsonParser, (req, res) => {
@@ -44,14 +68,15 @@ app.post("/postencr", jsonParser, (req, res) => {
 
   let { uniqueLabelCorrection, encrBulletin, signRegistrator, blindEncrypt } =
     req.body;
+
   let { registrarKeyPub } = keyRegistrar;
 
-  //   console.log(registrarKeyPub);
   let signVerify = RSASignVerify(
     signRegistrator,
     blindEncrypt,
     registrarKeyPub
   );
+
   //Если подпись регистратора верна
   if (signVerify) {
     const newVot = {
@@ -61,6 +86,7 @@ app.post("/postencr", jsonParser, (req, res) => {
       secretVotingKey: "",
       bulleten: "",
     };
+
     table.push(newVot);
 
     res.end();
@@ -80,27 +106,10 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
     console.log(bullenetin);
     table[index].secretVotingKey = secretVotingKey;
     table[index].bulleten = bullenetin;
-    //  if (bullenetin == "1") {
-    //    table[index].bulleten = "Да";
-    //  } else {
-    //    table[index].bulleten = "Нет";
-    //  }
   }
-  //   console.log(index);
   res.send(table);
 });
-// app.post("/postloguser", jsonParser, (req, res) => {
-//   if (!req.body) return res.sendStatus(400);
 
-//   userLog.push(req.body.log);
-//   console.log(userLog);
-//   res.end();
-// });
-// app.get("/getloguser", jsonParser, (req, res) => {
-//   if (!req.body) return res.sendStatus(400);
-//   console.log(32131);
-//   res.send(userLog);
-// });
 app.listen(PORT, (error) => {
   error ? console.log(error) : console.log(`listening port ${PORT}`);
   request(
@@ -114,4 +123,32 @@ app.listen(PORT, (error) => {
       }
     }
   );
+  request(
+    {
+      method: "GET",
+      url: urlTime,
+    },
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        let timeObj = JSON.parse(body);
+        timeVot.startYear = timeObj.startYear;
+        timeVot.startMonth = timeObj.startMonth;
+        timeVot.startDay = timeObj.startDay;
+        timeVot.startH = timeObj.startH;
+        timeVot.startM = timeObj.startM;
+
+        timeVot.endYear = timeObj.endYear;
+        timeVot.endMonth = timeObj.endMonth;
+        timeVot.endDay = timeObj.endDay;
+        timeVot.endH = timeObj.endH;
+        timeVot.endM = timeObj.endM - 1;
+      }
+    }
+  );
 });
+
+function isValid(date, h1, m1, h2, m2) {
+  let h = date.getHours();
+  let m = date.getMinutes();
+  return (h1 < h || (h1 == h && m1 <= m)) && (h < h2 || (h == h2 && m <= m2));
+}

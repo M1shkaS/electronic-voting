@@ -44,6 +44,10 @@ const AuthorizationPage = () => {
                  <span>Регистратор сгенерировал открытый ключ(поместил его в kdc) и закрытый ключ </span>
                </div>
             )
+         }else if(res === "timesUp"){
+            setVoting(true);
+            setValuePassp("");
+            setErrorMessageByServer('Время голосования закончилось')
          }else{
             setVoting(true);
             setValuePassp("");

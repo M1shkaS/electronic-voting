@@ -17,6 +17,8 @@ const ResultVotingPage = () => {
    const [modalActive, setModalActive] = useState(false);
    const [modalInfoVotingDataActive, setModalInfoVotingDataActive] = useState(false);
    const [infoVotingData, setInfoVotingData] = useState({});
+   const [time, setTime] = useState(false);
+   const [dateTime, setDateTime] = useState({});
     
    useEffect( () => {
       getData();
@@ -24,36 +26,50 @@ const ResultVotingPage = () => {
 
    const getData =  async() => {
       let res = await api.posts.getDataTable();
-      if(res.length !== 0 ){
-         tableDataStore.addTableData(res)
+
+      if(res?.message === "timeTicking"){
+         console.log(231);
+         setTime(true);
+         setDateTime({...res.timeVot});
+      }else{
+         if(res.length !== 0 ){
+            tableDataStore.addTableData(res)
+         }
+         setData(res);
       }
-     console.log(res);
-      setData(res);
+
    }
 
  return(
    <>
-   {data.length !==0 ?
-      <div>
-      <PieChart data={data} />
-      {/* <Timer/> */}
-      <div className='post-data'>
-         <span className='info-btn'>Чтобы ваш голос был учтён отправьте свои данные, полученные при голосовании, нажав кнопку - </span>
-         <button className='btn-open-modal' onClick={() => setModalActive(true)}>Отправить данные</button>
-      </div>
-      {data.length !== 0 ?
-        <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
-        null
-      }
-   </div>
-   :<>
-      <div className="empty-data">Данных пока нет</div>
+   {time ?
+   <>
+      <Timer getData={getData} dateTime={dateTime}/>
+      <div className="empty-data">Время голосования ещё не закончилось, когда происходит голосования нельзя узнать промежуточные результаты. Дождитесь, пожалуйста, конца голосования</div>
       <img className='sad' src={sad} alt="sad" />
+   </>  
+   :
+   <>
+      {data.length !==0 ?
+         <div>
+            <PieChart data={data} />
+            <div className='post-data'>
+               <span className='info-btn'>Чтобы ваш голос был учтён отправьте свои данные, полученные при голосовании, нажав кнопку - </span>
+               <button className='btn-open-modal' onClick={() => setModalActive(true)}>Отправить данные</button>
+            </div>
+            {data.length !== 0 ?
+            <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
+            null
+            }
+         </div>
+      :
+         <>
+            <div className="empty-data">Данных пока нет</div>
+            <img className='sad' src={sad} alt="sad" />
+         </>  
+   }
    </>
-  
-   
-   
-}
+   }
 {
    modalActive ?
    <Modal active={modalActive} setActive={setModalActive} setModalInfoVotingDataActive={setModalInfoVotingDataActive}>
@@ -65,7 +81,6 @@ const ResultVotingPage = () => {
    </Modal>
    :null
 }
-
    </>
  )
 }

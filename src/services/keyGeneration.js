@@ -24,7 +24,7 @@ export function maskingFactorGenerator(min = 1, max = 100000000000) {
 export function createUniqueLabelCorrection() {
   let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     word = "";
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 6; i++) {
     word += alphabet[Math.round(Math.random() * (alphabet.length - 1))];
     word += maskingFactorGenerator(1, 20);
   }

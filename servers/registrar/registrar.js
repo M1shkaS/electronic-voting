@@ -3,12 +3,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { keyGeneratorRSA } from "../../src/crypto-helper/keyGeneration.js";
-import { hash } from "../../src/crypto-helper/hash.js";
-import {
-  RSASign,
-  RSASignVerify,
-} from "../../src/crypto-helper/rsaCryptography.js";
+import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
+import { hash } from "../../src/services/hash.js";
+import { RSASign, RSASignVerify } from "../../src/services/rsaSign.js";
 
 const app = express();
 
@@ -43,12 +40,28 @@ let KDC = {
   voters: [],
 };
 
+let timeVot = {
+  startYear: 2023,
+  startMonth: 4,
+  startDay: 7,
+  startH: 8,
+  startM: 0,
+  endYear: 2023,
+  endMonth: 4,
+  endDay: 7,
+  endH: 14,
+  endM: 14,
+};
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
 app.get("/getkey", (req, res) => {
   res.send({ registrarKeyPub: KDC.registrar.pubKey });
+});
+app.get("/gettime", (req, res) => {
+  res.send(timeVot);
 });
 
 app.post("/", urlencodedParser, function (req, res) {
@@ -69,22 +82,34 @@ app.post("/addvoter", jsonParser, (req, res) => {
 
 app.post("/voters", jsonParser, (req, res) => {
   if (!req.body) return res.sendStatus(400);
+  //Проверка времени
+  let timeRes = isValid(
+    new Date(),
+    timeVot.startH,
+    timeVot.startM,
+    timeVot.endH,
+    timeVot.endM - 1
+  );
 
-  //Находим нужного человека, который  был занесён в список всех правомочных избирателей по id(паспорту)
-  let index = voters.findIndex((person) => person.passport === req.body.pass);
-  if (index !== -1) {
-    let statePeson = voters[index].state;
-    if (voters[index].state === "went") {
-      voters[index].state = "preparation";
-      res.send({ status: statePeson });
-    } else if (voters[index].state !== "preparation") {
-      voters[index].state = "went";
-      res.send({ status: statePeson });
-    } else {
-      res.send({ status: statePeson });
-    }
+  if (!timeRes) {
+    res.send({ status: "timesUp" });
   } else {
-    res.send({ status: "nouser" });
+    //Находим нужного человека, который  был занесён в список всех правомочных избирателей по id(паспорту)
+    let index = voters.findIndex((person) => person.passport === req.body.pass);
+    if (index !== -1) {
+      let statePeson = voters[index].state;
+      if (voters[index].state === "went") {
+        voters[index].state = "preparation";
+        res.send({ status: statePeson });
+      } else if (voters[index].state !== "preparation") {
+        voters[index].state = "went";
+        res.send({ status: statePeson });
+      } else {
+        res.send({ status: statePeson });
+      }
+    } else {
+      res.send({ status: "nouser" });
+    }
   }
 });
 
@@ -92,7 +117,6 @@ app.post("/postkeyvoters", jsonParser, (req, res) => {
   if (!req.body) return res.sendStatus(400);
 
   KDC.voters.push(req.body);
-  //   console.log(KDC);
 
   res.send({ registrarKeyPub: KDC.registrar.pubKey.e });
 });
@@ -126,6 +150,11 @@ app.post("/postencrvoting", jsonParser, (req, res) => {
 app.listen(PORT, (error) => {
   keyRegistrar = keyGeneratorRSA();
   KDC.registrar.pubKey = keyRegistrar.pubKey;
-  //   console.log(KDC);
   error ? console.log(error) : console.log(`listening port ${PORT}`);
 });
+
+function isValid(date, h1, m1, h2, m2) {
+  let h = date.getHours();
+  let m = date.getMinutes();
+  return (h1 < h || (h1 == h && m1 <= m)) && (h < h2 || (h == h2 && m <= m2));
+}

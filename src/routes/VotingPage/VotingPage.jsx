@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import {  toJS  } from "mobx";
-import { keyGeneratorRSA, keyGeneratorEC, maskingFactorGenerator, createUniqueLabelCorrection } from '../../crypto-helper/keyGeneration';
-import {  AESEncrypt } from '../../crypto-helper/aesCryptography';
-import { blind, createNumberFromText, blindReverse } from '../../crypto-helper/blind';
-import { RSASign } from '../../crypto-helper/rsaCryptography';
-import { hash } from '../../crypto-helper/hash';
+import { keyGeneratorRSA, keyGeneratorEC, maskingFactorGenerator, createUniqueLabelCorrection } from '../../services/keyGeneration';
+import {  AESEncrypt } from '../../services/aesCryptography';
+import { blind, createNumberFromText, blindReverse } from '../../services/blind';
+import { RSASign } from '../../services/rsaSign';
+import { hash } from '../../services/hash';
 import keyStoreVoter from '../../stores/KeyStore';
 import VotingForm from '../../components/VotingForm/VotingForm';
 import ThanksMessage from '../../components/ThanksMessage/ThanksMessage';
