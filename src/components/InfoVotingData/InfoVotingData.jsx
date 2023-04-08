@@ -1,8 +1,8 @@
 import './InfoVotingData.scss';
 
 const InfoVotingData = ({infoVotingData}) => {
-   let {uniqueLabelCorrection, encrBulletin, signRegistrator, secretVotingKey, bulleten} = infoVotingData;
-   let strSign = signRegistrator.length > 125 ? signRegistrator.slice(0, 50)+"...":signRegistrator;
+   let {uniqueLabelCorrection, encrBulletin, signRegistrarWithoutMask, secretVotingKey, bulleten} = infoVotingData;
+   let strSign = signRegistrarWithoutMask.length > 125 ? signRegistrarWithoutMask.slice(0, 50)+"...":signRegistrarWithoutMask;
    let strEncr = encrBulletin.length > 125 ? encrBulletin.slice(0, 50)+"...":encrBulletin;
    return(
       <div className="info-for-voting-data">

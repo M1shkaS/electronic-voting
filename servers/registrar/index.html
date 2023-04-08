@@ -12,9 +12,11 @@
         height: 225px;
         background: #fff;
         border-radius: 10px;
-        margin: 10% auto;
+        margin: 2% auto;
+        margin-top: 10%;
         box-shadow: 2px 2px 4px 0px #000000;
       }
+
       .Myform h1 {
         margin: 0;
         background-color: #282830;
@@ -64,13 +66,30 @@
       .btn:hover {
         background-color: #185c63;
       }
+      .MyformTime {
+        width: 450px;
+        margin: 30px auto;
+      }
+      .btnTime {
+        margin: 0;
+      }
+      .body-form {
+        background-color: white;
+        width: 450px;
+        margin: 0 auto;
+        padding: 5px;
+        border-radius: 10px;
+      }
+      .body-form h2 {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
     <div class="Myform">
       <h1>Добавить избирателя</h1>
       <div class="inp">
-        <form name="regisrration">
+        <form class="formVot" name="regisrration">
           <input
             class="log"
             type="text"
@@ -89,14 +108,34 @@
         </form>
       </div>
     </div>
+    <div class="body-form">
+      <h2>Задать время</h2>
+      <form class="formTimeStart">
+        <div class="MyformTime">
+          <label for="localdate">Дата и время начала: </label>
+          <input type="datetime-local" id="localdate" name="date" />
+
+          <button class="btn btnTime" type="submit">Отправить</button>
+        </div>
+      </form>
+      <form class="formTimeEnd">
+        <div class="MyformTime">
+          <label for="localdate">Дата и время конца: </label>
+          <input type="datetime-local" id="localdate" name="date" />
+
+          <button class="btn btnTime" type="submit">Отправить</button>
+        </div>
+      </form>
+    </div>
+
     <script>
-      const form = document.querySelector("form"),
+      const formVot = document.querySelector(".formVot"),
         btnAddForm = document.querySelectorAll(".btn");
 
-      form.addEventListener("submit", (event) => {
+      formVot.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const formData = new FormData(form);
+        const formData = new FormData(formVot);
 
         const obj = {};
         formData.forEach(function (val, key) {
@@ -110,7 +149,51 @@
           },
           body: JSON.stringify(obj),
         });
-        form.reset();
+        formVot.reset();
+      });
+
+      const formTimeEnd = document.querySelector(".formTimeEnd");
+
+      formTimeEnd.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(formTimeEnd);
+
+        const obj = {};
+        formData.forEach(function (val, key) {
+          obj[key] = val;
+        });
+
+        fetch("http://localhost:3001/addTimeEnd", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(obj),
+        });
+        formTimeEnd.reset();
+      });
+
+      const formTimeStart = document.querySelector(".formTimeStart");
+
+      formTimeStart.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(formTimeStart);
+
+        const obj = {};
+        formData.forEach(function (val, key) {
+          obj[key] = val;
+        });
+
+        fetch("http://localhost:3001/addTimeStart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(obj),
+        });
+        formTimeStart.reset();
       });
     </script>
   </body>

@@ -2,7 +2,6 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import request from "request";
-import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
 import { RSASignVerify } from "../../src/services/rsaSign.js";
 import { AESDecrypt } from "../../src/services/aesCryptography.js";
 
@@ -63,11 +62,22 @@ app.get("/getdatatable", (req, res) => {
   }
 });
 
+app.post("/addTimeCon", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+  timeVot = req.body;
+  res.end();
+});
+
 app.post("/postencr", jsonParser, (req, res) => {
   if (!req.body) return res.sendStatus(400);
 
-  let { uniqueLabelCorrection, encrBulletin, signRegistrator, blindEncrypt } =
-    req.body;
+  let {
+    uniqueLabelCorrection,
+    encrBulletin,
+    signRegistrator,
+    blindEncrypt,
+    signRegistrarWithoutMask,
+  } = req.body;
 
   let { registrarKeyPub } = keyRegistrar;
 
@@ -82,7 +92,7 @@ app.post("/postencr", jsonParser, (req, res) => {
     const newVot = {
       uniqueLabelCorrection,
       encrBulletin,
-      signRegistrator,
+      signRegistrarWithoutMask,
       secretVotingKey: "",
       bulleten: "",
     };
@@ -103,7 +113,6 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
   );
   if (index >= 0) {
     let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
-    console.log(bullenetin);
     table[index].secretVotingKey = secretVotingKey;
     table[index].bulleten = bullenetin;
   }

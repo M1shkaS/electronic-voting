@@ -26,8 +26,18 @@ const FormPostData = ({setActive}) => {
               {uniqueLabelCorrection} <br />
               {secretVotingKey} 
             </div>)
+            logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Пользователь отправляет свою метку и секретный ключ для расшифрования:</span><br/>
+               {uniqueLabelCorrection} <br />
+               {secretVotingKey} 
+            </div>) 
           setActive(false);
            resetForm();
+           logStore.addAppTextLog(
+            <div className="logUser__text" >
+               <span>Счётчик расшифровал бюллетень и посчитал голос</span><br/>
+            </div>) 
          }}
       >
          <Form action="" className="ui-form">

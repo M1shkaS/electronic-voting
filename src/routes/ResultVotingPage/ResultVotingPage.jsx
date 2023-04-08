@@ -28,7 +28,7 @@ const ResultVotingPage = () => {
 
    const getData =  async() => {
       let res = await api.posts.getDataTable();
-
+      console.log(res);
       if(res?.message === "timeTicking"){
          setTime(true);
          setDateTime({...res.timeVot});

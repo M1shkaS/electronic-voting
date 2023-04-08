@@ -6,6 +6,9 @@ import cors from "cors";
 import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
 import { hash } from "../../src/services/hash.js";
 import { RSASign, RSASignVerify } from "../../src/services/rsaSign.js";
+import request from "request";
+
+const urlTime = "http://localhost:3002/addTimeCon";
 
 const app = express();
 
@@ -48,9 +51,9 @@ let timeVot = {
   startM: 0,
   endYear: 2023,
   endMonth: 4,
-  endDay: 7,
-  endH: 16,
-  endM: 8,
+  endDay: 8,
+  endH: 14,
+  endM: 21,
 };
 
 app.get("/", (req, res) => {
@@ -77,6 +80,53 @@ app.post("/addvoter", jsonParser, (req, res) => {
     state: "registered",
   };
   voters.push(obj);
+  res.end();
+});
+
+app.post("/addTimeStart", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+
+  //  Добавление времени
+  let array = req.body.date.split(/[-T:]/);
+  console.log(array);
+  timeVot.startYear = +array[0];
+  timeVot.startMonth = +array[1].replace("0", "");
+  timeVot.startDay = +array[2].replace("0", "");
+  timeVot.startH = +array[3].replace("0", "");
+  timeVot.startM = +array[4].replace("0", "");
+
+  fetch(urlTime, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(timeVot),
+  });
+
+  res.end();
+});
+
+app.post("/addTimeEnd", jsonParser, (req, res) => {
+  if (!req.body) return res.sendStatus(400);
+
+  //  Добавление времени
+  let array = req.body.date.split(/[-T:]/);
+  timeVot.endYear = +array[0];
+  timeVot.endMonth = +array[1].replace("0", "");
+  timeVot.endDay = +array[2].replace("0", "");
+  timeVot.endH = +array[3].replace("0", "");
+  timeVot.endM = +array[4].replace("0", "") - 1;
+
+  fetch(urlTime, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(timeVot),
+  });
+
   res.end();
 });
 

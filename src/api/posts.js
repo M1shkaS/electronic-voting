@@ -40,13 +40,15 @@ export default {
     uniqueLabelCorrection,
     encrBulletin,
     signRegistrator,
-    blindEncrypt
+    blindEncrypt,
+    signRegistrarWithoutMask
   ) {
     const response = await axios.post(`http://localhost:3002/postencr`, {
       uniqueLabelCorrection,
       encrBulletin,
       signRegistrator,
       blindEncrypt,
+      signRegistrarWithoutMask,
     });
 
     const dataResponse = await response.data.signByRegistrator;

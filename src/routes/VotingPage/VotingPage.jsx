@@ -13,6 +13,7 @@ import logStore from '../../stores/LogStore';
 import api from '../../api';
 import { Navigate} from "react-router-dom";
 import './VotingPage.scss';
+import SignRegistrar from '../../services/helpers';
 
 
 const VotingPage = () => {
@@ -40,8 +41,8 @@ const VotingPage = () => {
          logStore.addUserTextLog(
          <div className="logUser__text" >
            <span>Пользователь создал пару ключей:</span><br/>
-            (n, d) =  {privKey.n}, {privKey.d} <br/>
-            (n, e) = {pubKey.n}, {pubKey.e}
+           <span>(n, d) </span>  =  {privKey.n}, {privKey.d} <br/>
+           <span>(n, e) </span> = {pubKey.n}, {pubKey.e}
          </div>)
 
 
@@ -186,16 +187,18 @@ const VotingPage = () => {
 
       let blindReverseFirst = blindReverse(blindEncrByRegistrator, numberKeyPubRegstr);
       let blindReverseSecond = blindReverse(blindReverseFirst, maskingFactor);
+
+      let signRegistrarWithoutMask = SignRegistrar(signRegistrator);
       // console.log("Снятие маскирующих множителей: " + blindReverseSecond);
       logStore.addUserTextLog(
          <div className="logUser__text" >
            <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП регистратора:</span><br/>
-           {blindReverseSecond}
+           {signRegistrarWithoutMask}
          </div>)
       logStore.addAppTextLog(
          <div className="logUser__text" >
             <span>Пользователь снял «маскирующий» множитель со слепой ЭЦП регистратора:</span><br/>
-            {blindReverseSecond}
+            {signRegistrarWithoutMask}
          </div>
       )
       let uniqueLabelCorrection = createUniqueLabelCorrection()
@@ -211,10 +214,13 @@ const VotingPage = () => {
                {uniqueLabelCorrection}
             </div>
          )
-       await api.posts.postEncryptCounter(uniqueLabelCorrection, encryptVoting,signRegistrator, blindEncrByRegistrator );
+       await api.posts.postEncryptCounter(uniqueLabelCorrection, encryptVoting,signRegistrator, blindEncrByRegistrator, signRegistrarWithoutMask );
        logStore.addUserTextLog(
          <div className="logUser__text" >
-           <span>Пользователь отправил счётчику свою метку, зашифрованный бюллетень и ЭЦП регистратора</span>
+           <span>Пользователь отправил счётчику свою метку, зашифрованный бюллетень и ЭЦП регистратора</span><br/>
+           <span>Метка: </span>{uniqueLabelCorrection} <br/>
+           <span>Зашифрованная бюллетень: </span>{encryptVoting}<br/>
+           <span>ЭЦП регистратора: </span>{signRegistrarWithoutMask}
          </div>)
          logStore.addAppTextLog(
             <div className="logUser__text" >
