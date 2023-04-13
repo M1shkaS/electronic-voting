@@ -1,5 +1,3 @@
-import bigInt from "big-integer";
-import { KEYUTIL } from "jsrsasign";
 import CryptoJS from "crypto-js";
 
 export function AESEncrypt(pureText, privKey) {

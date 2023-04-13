@@ -76,7 +76,6 @@ const VotingPage = () => {
             </div>
          )
 
-
          // Генерируем случайный множитель
          let maskingFactor = maskingFactorGenerator();
          keyStoreVoter.postMaskingFactor(maskingFactor);
@@ -241,10 +240,22 @@ const VotingPage = () => {
        setValueVoting(true);
 
        //Как закончится время голосования отправляем секретный ключ
+      await api.posts.postVotingKey(uniqueLabelCorrection, secretKey);
       let getTimeInterval =  setInterval(async () =>{
          let res =  await api.posts.getRemainingTime();
          if(res === "isEnd"){
             await api.posts.postVotingKey(uniqueLabelCorrection, secretKey);
+
+            logStore.addUserTextLog(
+               <div className="logUser__text" >
+                  <span>Пользователь отправил счётчику свою метку, зсекретный ключ</span>
+               </div>
+            )
+            logStore.addAppTextLog(
+               <div className="logUser__text" >
+                  <span>Счётчик получил уникальную метку и секретный ключ, и расшифровал нужный бюллетень </span>
+               </div>
+            )
             clearInterval(getTimeInterval);
          }
       }, 5000)

@@ -24,6 +24,7 @@ const ResultVotingPage = () => {
    const [loading, setLoading] = useState(true);
     
    useEffect( () => {
+      localStorage.clear();
       getData();
    } , [])
 

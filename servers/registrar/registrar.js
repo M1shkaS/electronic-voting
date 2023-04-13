@@ -111,10 +111,10 @@ app.post("/addTimeEnd", jsonParser, (req, res) => {
   //  Добавление времени
   let array = req.body.date.split(/[-T:]/);
   timeVot.endYear = +array[0];
-  timeVot.endMonth = +array[1].replace("0", "");
-  timeVot.endDay = +array[2].replace("0", "");
-  timeVot.endH = +array[3].replace("0", "");
-  timeVot.endM = +array[4].replace("0", "") - 1;
+  timeVot.endMonth = +array[1].replace(/^0/, "");
+  timeVot.endDay = +array[2].replace(/^0/, "");
+  timeVot.endH = +array[3].replace(/^0/, "");
+  timeVot.endM = +array[4].replace(/^0/, "") - 1;
 
   fetch(urlTime, {
     method: "POST",

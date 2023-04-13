@@ -129,9 +129,24 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
     (person) => person.uniqueLabelCorrection === uniqueLabelCorrection
   );
   if (index >= 0) {
-    let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
-    table[index].secretVotingKey = secretVotingKey;
-    table[index].bulleten = bullenetin;
+    let endDate = new Date(
+      timeVot.endYear,
+      timeVot.endMonth - 1,
+      timeVot.endDay,
+      timeVot.endH,
+      timeVot.endM + 1
+    );
+
+    // получаем текущую дату
+    let currentDate = new Date();
+
+    let millisecondsLeft = endDate.getTime() - currentDate.getTime();
+
+    setTimeout(() => {
+      let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
+      table[index].secretVotingKey = secretVotingKey;
+      table[index].bulleten = bullenetin;
+    }, millisecondsLeft);
   }
   res.send("всё хорошо");
 });
