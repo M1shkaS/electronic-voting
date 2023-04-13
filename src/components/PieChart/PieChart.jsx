@@ -9,7 +9,6 @@ const PieChart = ({data}) => {
    let counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0, counter5 = 0, counter6 = 0, counter7 = 0;
    tablData.forEach(element => {
       let {bulleten} = element;
-      console.log(bulleten);
       if(bulleten === ""){
          counter7++;
       }

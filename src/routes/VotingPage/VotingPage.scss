@@ -15,7 +15,7 @@
 }
 
 /*//////////////////////////////////////////////////////////////////
-  [ login ]*/
+   [ login ]*/
 
 .limiter {
   width: 100%;
@@ -34,7 +34,7 @@
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #f2f2f2;
+  background: linear-gradient(90deg, #c5e3ee, #e2d9d9);
   flex-direction: column;
 }
 
@@ -53,7 +53,7 @@
 }
 
 /*------------------------------------------------------------------
-  [ Form ]*/
+   [ Form ]*/
 
 .login10-form {
   width: 100%;
@@ -72,7 +72,7 @@
 }
 
 /*------------------------------------------------------------------
-  [ Input ]*/
+   [ Input ]*/
 
 .wrap-input10 {
   width: 22%;
@@ -202,7 +202,7 @@
 }
 
 /*------------------------------------------------------------------
-  [ Button ]*/
+   [ Button ]*/
 .container-login10-form-btn {
   display: -webkit-box;
   display: -webkit-flex;
@@ -349,7 +349,7 @@
 }
 
 /*------------------------------------------------------------------
-  [ Responsive ]*/
+   [ Responsive ]*/
 
 @media (max-width: 576px) {
   .wrap-login10 {
@@ -358,7 +358,7 @@
 }
 
 /*------------------------------------------------------------------
-  [ Alert validate ]*/
+   [ Alert validate ]*/
 
 .validate-input {
   position: relative;

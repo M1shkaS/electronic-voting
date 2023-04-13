@@ -11,6 +11,7 @@ import InfoVotingData from '../../components/InfoVotingData/InfoVotingData';
 import api from '../../api';
 
 import './ResultVotingPage.scss';
+import ResultsVoting from '../../components/ResultsVoting/ResultsVoting';
 
 const ResultVotingPage = () => {
 
@@ -28,10 +29,15 @@ const ResultVotingPage = () => {
 
    const getData =  async() => {
       let res = await api.posts.getDataTable();
-      console.log(res);
       if(res?.message === "timeTicking"){
          setTime(true);
          setDateTime({...res.timeVot});
+         if(res.table.length !== 0 ){
+
+            tableDataStore.addTableData(res.table)
+         }
+
+         setData(res.table);
          setLoading(false)
       }else{
          if(res.length !== 0 ){
@@ -51,28 +57,51 @@ const ResultVotingPage = () => {
    <> 
    {time ?
       <>
-         <Timer getData={getData} dateTime={dateTime}/>
-         <div className="empty-data">Время голосования ещё не закончилось, когда происходит голосования нельзя узнать промежуточные результаты. Дождитесь, пожалуйста, конца голосования</div>
-         <img className='sad' src={sad} alt="sad" />
+         <div>
+               {data.length !== 0 ?
+                     <PieChart data={data} />:
+                    null
+               }
+              
+        
+               <Timer getData={getData} dateTime={dateTime}/>  
+               <div className='post-data'>
+                  <span className='info-btn'>Вы можете проверить, что ваш голос был засчитан(в таблице) по своей уникальной метке, которая была выдана вам во время голосования </span>
+               </div> 
+               {data.length !== 0 ?
+               <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
+               <>
+                    <div className="empty-data">Пока никто не проголосовал, данных нет</div>
+                    <img className='sad' src={sad} alt="sad" />
+               </>
+               }
+            </div>   
+
+
+
       </>  
       :
       <>
          {data.length !==0 ?
             <div>
-               <PieChart data={data} />
+               <PieChart data={data} s/>
                <div className='post-data'>
-                  <span className='info-btn'>Чтобы ваш голос был учтён отправьте свои данные, полученные при голосовании, нажав кнопку - </span>
-                  <button className='btn-open-modal' onClick={() => setModalActive(true)}>Отправить данные</button>
+                  <span className='info-btn'>Вы можете проверить, что ваш голос засчитан и посчитан правильно по своей уникальной метке</span>
                </div>
                {data.length !== 0 ?
-               <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
+               <>
+                    <ResultsVoting data={data}/>
+                    <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>
+               </>
+              :
                null
                }
             </div>
          :
             <>
-               <div className="empty-data">Данных пока нет</div>
+               <div className="empty-data">Голосование ещё не началось</div>
                <img className='sad' src={sad} alt="sad" />
+               <div className='empty-descr'>Дождитесь, когда когда начнётся голосование. Как только оно начнётся, вы сразу сможете проголосовать, вам будут выдана уникальная метка с помощью которой вы сможете найти свой голос в таблице, который будет  засчитан и посчитан. </div>
             </>  
       }
       </>
@@ -86,7 +115,7 @@ const ResultVotingPage = () => {
    {
       modalInfoVotingDataActive ?
       <InfoVotingData infoVotingData={infoVotingData}/> :
-      <FormPostData setActive={setModalActive}/>
+      null
    }
    </Modal>
    :null

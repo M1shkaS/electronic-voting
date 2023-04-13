@@ -6,7 +6,6 @@ import cors from "cors";
 import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
 import { hash } from "../../src/services/hash.js";
 import { RSASign, RSASignVerify } from "../../src/services/rsaSign.js";
-import request from "request";
 
 const urlTime = "http://localhost:3002/addTimeCon";
 
@@ -44,16 +43,16 @@ let KDC = {
 };
 
 let timeVot = {
-  startYear: 2023,
-  startMonth: 4,
-  startDay: 7,
-  startH: 8,
-  startM: 0,
-  endYear: 2023,
-  endMonth: 4,
-  endDay: 8,
-  endH: 14,
-  endM: 21,
+  startYear: null,
+  startMonth: null,
+  startDay: null,
+  startH: null,
+  startM: null,
+  endYear: null,
+  endMonth: null,
+  endDay: null,
+  endH: null,
+  endM: null,
 };
 
 app.get("/", (req, res) => {
@@ -88,12 +87,11 @@ app.post("/addTimeStart", jsonParser, (req, res) => {
 
   //  Добавление времени
   let array = req.body.date.split(/[-T:]/);
-  console.log(array);
   timeVot.startYear = +array[0];
-  timeVot.startMonth = +array[1].replace("0", "");
-  timeVot.startDay = +array[2].replace("0", "");
-  timeVot.startH = +array[3].replace("0", "");
-  timeVot.startM = +array[4].replace("0", "");
+  timeVot.startMonth = +array[1].replace(/^0/, "");
+  timeVot.startDay = +array[2].replace(/^0/, "");
+  timeVot.startH = +array[3].replace(/^0/, "");
+  timeVot.startM = +array[4].replace(/^0/, "");
 
   fetch(urlTime, {
     method: "POST",
@@ -138,7 +136,7 @@ app.post("/voters", jsonParser, (req, res) => {
     timeVot.startH,
     timeVot.startM,
     timeVot.endH,
-    timeVot.endM - 1
+    timeVot.endM
   );
 
   if (!timeRes) {

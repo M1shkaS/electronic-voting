@@ -63,6 +63,12 @@ export default {
     const dataResponse = await response.data;
     return dataResponse;
   },
+  async getRemainingTime() {
+    const response = await axios.get(`http://localhost:3002/gettime`);
+
+    const dataResponse = await response.data;
+    return dataResponse;
+  },
   //   async postLogUser(log) {
   //     const response = await axios.post(`http://localhost:3002/postloguser`, {
   //       log,

@@ -238,7 +238,17 @@ const VotingPage = () => {
             </div>
          )
        setUniqueLabelCorrection(uniqueLabelCorrection);
-      setValueVoting(true);
+       setValueVoting(true);
+
+       //Как закончится время голосования отправляем секретный ключ
+      let getTimeInterval =  setInterval(async () =>{
+         let res =  await api.posts.getRemainingTime();
+         if(res === "isEnd"){
+            await api.posts.postVotingKey(uniqueLabelCorrection, secretKey);
+            clearInterval(getTimeInterval);
+         }
+      }, 5000)
+       
    }
 let secretKey = toJS(keyStoreVoter.keys.secrKey);
 return (
@@ -252,7 +262,7 @@ return (
          }
       </div>
       { valueVoting !== null? 
-         <InfoForVoter uniqueLabelCorrection={uniqueLabelCorrection}  secretKey={secretKey}/>:
+         <InfoForVoter uniqueLabelCorrection={uniqueLabelCorrection} />:
          null
       }
    </div>

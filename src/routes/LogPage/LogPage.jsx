@@ -3,7 +3,6 @@ import LogUser from "../../components/LogUser/LogUser";
 
 import './LogPage.scss';
 const LogPage = () => {
-   console.log(1);
  return(
  <div className="log-page">
    <LogUser/>

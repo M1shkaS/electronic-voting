@@ -58,7 +58,24 @@ app.get("/getdatatable", (req, res) => {
   if (!timeRes) {
     res.send(table);
   } else {
-    res.send({ message: "timeTicking", timeVot });
+    res.send({ message: "timeTicking", timeVot, table });
+  }
+});
+
+// !
+app.get("/gettime", (req, res) => {
+  let timeRes = isValid(
+    new Date(),
+    timeVot.startH,
+    timeVot.startM,
+    timeVot.endH,
+    timeVot.endM
+  );
+
+  if (!timeRes) {
+    res.send("isEnd");
+  } else {
+    res.send("notOverYet");
   }
 });
 
@@ -116,7 +133,7 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
     table[index].secretVotingKey = secretVotingKey;
     table[index].bulleten = bullenetin;
   }
-  res.send(table);
+  res.send("всё хорошо");
 });
 
 app.listen(PORT, (error) => {
