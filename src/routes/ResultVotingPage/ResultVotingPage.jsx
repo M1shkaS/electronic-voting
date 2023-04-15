@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import PieChart from '../../components/PieChart/PieChart';
-import FormPostData from '../../components/FormPostData/FormPostData';
 import TableData from '../../components/TableData/TableData';
 import Modal from '../../components/Modal/Modal';
 import Timer from '../../components/Timer/Timer';
@@ -63,8 +62,7 @@ const ResultVotingPage = () => {
                      <PieChart data={data} />:
                     null
                }
-              
-        
+
                <Timer getData={getData} dateTime={dateTime}/>  
                <div className='post-data'>
                   <span className='info-btn'>Вы можете проверить, что ваш голос был засчитан(в таблице) по своей уникальной метке, которая была выдана вам во время голосования </span>
@@ -77,9 +75,6 @@ const ResultVotingPage = () => {
                </>
                }
             </div>   
-
-
-
       </>  
       :
       <>

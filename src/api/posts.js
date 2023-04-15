@@ -26,7 +26,16 @@ export default {
       blindEncrypt,
     });
 
-    const dataResponse = await response.data.signByRegistrator;
+    const dataResponse = await response.data;
+    return dataResponse;
+  },
+  async test(unblinded, encryptVoting) {
+    const response = await axios.post(`http://localhost:3001/test`, {
+      unblinded,
+      encryptVoting,
+    });
+
+    const dataResponse = await response.data;
     return dataResponse;
   },
   async getDataTable() {
@@ -36,22 +45,14 @@ export default {
     return dataResponse;
   },
 
-  async postEncryptCounter(
-    uniqueLabelCorrection,
-    encrBulletin,
-    signRegistrator,
-    blindEncrypt,
-    signRegistrarWithoutMask
-  ) {
+  async postEncryptCounter(uniqueLabelCorrection, encryptVoting, unblinded) {
     const response = await axios.post(`http://localhost:3002/postencr`, {
       uniqueLabelCorrection,
-      encrBulletin,
-      signRegistrator,
-      blindEncrypt,
-      signRegistrarWithoutMask,
+      encryptVoting,
+      unblinded,
     });
 
-    const dataResponse = await response.data.signByRegistrator;
+    const dataResponse = await response.data;
     return dataResponse;
   },
   async postVotingKey(uniqueLabelCorrection, secretVotingKey) {
@@ -69,17 +70,4 @@ export default {
     const dataResponse = await response.data;
     return dataResponse;
   },
-  //   async postLogUser(log) {
-  //     const response = await axios.post(`http://localhost:3002/postloguser`, {
-  //       log,
-  //     });
-
-  //     const dataResponse = await response.data;
-  //     return dataResponse;
-  //   },
-  //   async getLogUser() {
-  //     const response = await axios.get(`http://localhost:3002/getloguser`);
-  //     const dataResponse = await response.data;
-  //     return dataResponse;
-  //   },
 };

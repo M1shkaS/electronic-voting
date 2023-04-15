@@ -12,7 +12,6 @@ import './AuthorizationPage.scss';
 
 import api from '../../api';
 
-
 const AuthorizationPage = () => {
 
    const [valuePassp, setValuePassp] = useState('');
@@ -27,6 +26,7 @@ const AuthorizationPage = () => {
    if(auth){
      return <Navigate to="/voting" replace={true} />
    }
+    
    const loginPerson = async () => {
       let res;
       if(valuePassp.length !== 0  ){

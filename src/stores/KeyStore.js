@@ -6,7 +6,10 @@ class KeyStoreVoter {
     secrKey: {},
   };
   maskingFactor = null;
-  registrarKeyPub = "";
+  registrarKeyPub = {
+    e: "",
+    n: "",
+  };
 
   constructor() {
     makeAutoObservable(this);

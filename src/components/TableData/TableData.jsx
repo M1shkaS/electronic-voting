@@ -30,8 +30,8 @@ const {tablData} = tableDataStore;
                })}
                >
                   <td><span>{data.uniqueLabelCorrection}</span> </td>
-                  <td><span>{data.encrBulletin}</span> </td>
-                  <td><span>{data.signRegistrarWithoutMask}</span> </td>
+                  <td><span>{data.encryptVoting}</span> </td>
+                  <td><span>{data.unblinded}</span> </td>
                   <td><span>{data.secretVotingKey ? data.secretVotingKey:"Данных нет"}</span> </td>
                   <td><span>{data.bulleten ? data.bulleten:"Данных нет"}</span> </td>
                </tr>

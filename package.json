@@ -8,6 +8,7 @@
       "@testing-library/user-event": "^13.5.0",
       "axios": "^1.3.2",
       "big-integer": "^1.6.51",
+      "blind-signatures": "^1.0.7",
       "body-parser": "^1.20.1",
       "cors": "^2.8.5",
       "crypto-js": "^4.1.1",
@@ -32,9 +33,9 @@
       "yup": "^1.0.2"
    },
    "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
+      "start": "react-app-rewired start",
+      "build": "react-app-rewired build",
+      "test": "react-app-rewired test",
       "eject": "react-scripts eject",
       "dev": "nodemon servers/registrar/registrar.js",
       "dev2": "nodemon servers/counter/counter.js"
@@ -58,7 +59,9 @@
       ]
    },
    "devDependencies": {
-      "nodemon": "^2.0.20"
-   },
-   "type": "module"
+      "node-polyfill-webpack-plugin": "^2.0.1",
+      "nodemon": "^2.0.20",
+      "react-app-rewired": "^2.2.1"
+   }
+
 }

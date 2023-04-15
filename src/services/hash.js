@@ -1,5 +1,6 @@
-import { KJUR } from "jsrsasign";
+const { KJUR } = require("jsrsasign");
 
-export function hash(pureText) {
+function hash(pureText) {
   return KJUR.crypto.Util.md5(pureText);
 }
+module.exports = { hash };

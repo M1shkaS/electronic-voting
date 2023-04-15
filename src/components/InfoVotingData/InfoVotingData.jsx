@@ -1,9 +1,9 @@
 import './InfoVotingData.scss';
 
 const InfoVotingData = ({infoVotingData}) => {
-   let {uniqueLabelCorrection, encrBulletin, signRegistrarWithoutMask, secretVotingKey, bulleten} = infoVotingData;
-   let strSign = signRegistrarWithoutMask.length > 125 ? signRegistrarWithoutMask.slice(0, 50)+"...":signRegistrarWithoutMask;
-   let strEncr = encrBulletin.length > 125 ? encrBulletin.slice(0, 50)+"...":encrBulletin;
+   let {uniqueLabelCorrection, encryptVoting, unblinded, secretVotingKey, bulleten} = infoVotingData;
+   let strSign = unblinded.length > 125 ? unblinded.slice(0, 50)+"...":unblinded;
+   let strEncr = encryptVoting.length > 125 ? encryptVoting.slice(0, 50)+"...":encryptVoting;
    return(
       <div className="info-for-voting-data">
          <h3>Метка избирателя</h3>

@@ -1,7 +1,13 @@
 import {  Link } from "react-router-dom";
 import './ThanksMessage.scss';
-
+import logStore from "../../stores/LogStore";
 const ThanksMessage = () => {
+       
+   logStore.addAppTextLog(
+      <div className="logUser__text" >
+         <span>Счётчик публикет: уникальные метки, зашифрованные бюллетени, эца регистратора</span>
+      </div>
+   )
    return(
       <div className="thanks-message">
       <h2 className="thanks-message__title">Спасибо за ваш голос!</h2>

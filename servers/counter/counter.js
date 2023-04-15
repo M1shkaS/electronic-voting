@@ -1,9 +1,9 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import request from "request";
-import { RSASignVerify } from "../../src/services/rsaSign.js";
-import { AESDecrypt } from "../../src/services/aesCryptography.js";
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const request = require("request");
+const { RSASignVerifyBlind } = require("../../src/services/rsaSign.js");
+const { AESDecrypt } = require("../../src/services/aesCryptography.js");
 
 const url = "http://localhost:3001/getkey";
 const urlTime = "http://localhost:3001/gettime";
@@ -88,36 +88,33 @@ app.post("/addTimeCon", jsonParser, (req, res) => {
 app.post("/postencr", jsonParser, (req, res) => {
   if (!req.body) return res.sendStatus(400);
 
-  let {
-    uniqueLabelCorrection,
-    encrBulletin,
-    signRegistrator,
-    blindEncrypt,
-    signRegistrarWithoutMask,
-  } = req.body;
+  let { uniqueLabelCorrection, encryptVoting, unblinded } = req.body;
 
   let { registrarKeyPub } = keyRegistrar;
 
-  let signVerify = RSASignVerify(
-    signRegistrator,
-    blindEncrypt,
-    registrarKeyPub
+  let signVerify = RSASignVerifyBlind(
+    unblinded,
+    registrarKeyPub.n.toString(),
+    registrarKeyPub.e.toString(),
+    encryptVoting
   );
 
   //Если подпись регистратора верна
   if (signVerify) {
     const newVot = {
       uniqueLabelCorrection,
-      encrBulletin,
-      signRegistrarWithoutMask,
+      encryptVoting,
+      unblinded,
       secretVotingKey: "",
       bulleten: "",
     };
-
     table.push(newVot);
 
-    res.end();
+    res.send(true);
+  } else {
+    res.send(false);
   }
+
   res.end();
 });
 
@@ -143,7 +140,7 @@ app.post("/postvotingkey", jsonParser, (req, res) => {
     let millisecondsLeft = endDate.getTime() - currentDate.getTime();
 
     setTimeout(() => {
-      let bullenetin = AESDecrypt(table[index].encrBulletin, secretVotingKey);
+      let bullenetin = AESDecrypt(table[index].encryptVoting, secretVotingKey);
       table[index].secretVotingKey = secretVotingKey;
       table[index].bulleten = bullenetin;
     }, millisecondsLeft);

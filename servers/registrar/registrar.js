@@ -1,18 +1,19 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import bodyParser from "body-parser";
-import cors from "cors";
-import { keyGeneratorRSA } from "../../src/services/keyGeneration.js";
-import { hash } from "../../src/services/hash.js";
-import { RSASign, RSASignVerify } from "../../src/services/rsaSign.js";
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { keyGeneratorRSA } = require("../../src/services/keyGeneration.js");
+const { hash } = require("../../src/services/hash.js");
+const {
+  RSASignVerify,
+  RSASignBlind,
+} = require("../../src/services/rsaSign.js");
 
 const urlTime = "http://localhost:3002/addTimeCon";
 
 const app = express();
 
 const PORT = 3001;
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const jsonParser = bodyParser.json();
 const urlencodedParser = express.urlencoded({ extended: false });
 
@@ -166,7 +167,7 @@ app.post("/postkeyvoters", jsonParser, (req, res) => {
 
   KDC.voters.push(req.body);
 
-  res.send({ registrarKeyPub: KDC.registrar.pubKey.e });
+  res.send({ registrarKeyPub: KDC.registrar.pubKey });
 });
 
 app.post("/postencrvoting", jsonParser, (req, res) => {
@@ -186,9 +187,16 @@ app.post("/postencrvoting", jsonParser, (req, res) => {
 
     //Подписывает Регситратор
     if (signVerify) {
-      let signByRegistrator = RSASign(blindEncrypt, keyRegistrar.privKey);
+      let signByRegistrator = RSASignBlind(
+        blindEncrypt.toString(),
+        keyRegistrar
+      );
 
-      res.send({ signByRegistrator });
+      res.send({
+        signByRegistrator: signByRegistrator.toString(),
+      });
+    } else {
+      res.send("error");
     }
   }
 
@@ -196,8 +204,9 @@ app.post("/postencrvoting", jsonParser, (req, res) => {
 });
 
 app.listen(PORT, (error) => {
-  keyRegistrar = keyGeneratorRSA();
-  KDC.registrar.pubKey = keyRegistrar.pubKey;
+  let { rsaKeyPair, pubKey } = keyGeneratorRSA();
+  keyRegistrar = rsaKeyPair;
+  KDC.registrar.pubKey = pubKey;
   error ? console.log(error) : console.log(`listening port ${PORT}`);
 });
 

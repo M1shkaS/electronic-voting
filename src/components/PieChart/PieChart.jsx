@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { Chart } from "react-google-charts";
 import tableDataStore from "../../stores/TableDataStore";
 
-const PieChart = ({data}) => {
+const PieChart = () => {
 
    const {tablData} = tableDataStore
 

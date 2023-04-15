@@ -1,6 +1,6 @@
-import CryptoJS from "crypto-js";
+const CryptoJS = require("crypto-js");
 
-export function AESEncrypt(pureText, privKey) {
+function AESEncrypt(pureText, privKey) {
   let ciphertext = encodeURIComponent(
     CryptoJS.AES.encrypt(JSON.stringify(pureText), privKey).toString()
   );
@@ -8,7 +8,7 @@ export function AESEncrypt(pureText, privKey) {
   return ciphertext;
 }
 
-export function AESDecrypt(encryptedText, pubKey) {
+function AESDecrypt(encryptedText, pubKey) {
   try {
     let bytes = CryptoJS.AES.decrypt(decodeURIComponent(encryptedText), pubKey);
     let decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -17,3 +17,8 @@ export function AESDecrypt(encryptedText, pubKey) {
     return "Ключ неверный, невозможно расшифровать";
   }
 }
+
+module.exports = {
+  AESEncrypt,
+  AESDecrypt,
+};
