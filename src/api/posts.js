@@ -1,4 +1,3 @@
-// import axios from "./helpers/axios.js";
 import axios from "axios";
 
 export default {

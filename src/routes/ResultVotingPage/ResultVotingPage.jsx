@@ -37,7 +37,7 @@ const ResultVotingPage = () => {
             tableDataStore.addTableData(res.table)
          }
 
-         setData(res.table);
+         // setData(res.table);
          setLoading(false)
       }else{
          if(res.length !== 0 ){
@@ -70,7 +70,7 @@ const ResultVotingPage = () => {
                {data.length !== 0 ?
                <TableData  setActive={setModalActive} setInfoVotingData={setInfoVotingData} setModalInfoVotingDataActive={setModalInfoVotingDataActive}/>:
                <>
-                    <div className="empty-data">Пока никто не проголосовал, данных нет</div>
+                    <div className="empty-data">Данных пока нет, дождитесь окончания голосования.</div>
                     <img className='sad' src={sad} alt="sad" />
                </>
                }

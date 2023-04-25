@@ -40,7 +40,7 @@ const VotingPage = () => {
             //Генерируем ключи
             let {privKey, pubKey} = keyGeneratorForVotRSA();
             let secretKey = keyGeneratorEC();
-            // logStore.addUserTextLog(`Пользователь создал пару ключей: (n, d) = ${privKey.n}, ${privKey.d}  (n, e) = ${pubKey.n}, ${pubKey.e}`)
+       
             logStore.addUserTextLog(
             <div className="logUser__text"  >
                <span>Пользователь создал пару ключей:</span><br/>
@@ -301,7 +301,7 @@ const VotingPage = () => {
             )
             clearInterval(getTimeInterval);
          }
-      }, 5000)
+      }, 2000)
       }
       catch(err){
          console.log("Что-то пошло не так!!");

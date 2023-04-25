@@ -25,16 +25,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-let voters = [
-  { name: "Дима", passport: "1", state: "registered" },
-  { name: "Дима", passport: "2", state: "registered" },
-  { name: "Дима", passport: "3", state: "registered" },
-  { name: "Дима", passport: "4", state: "registered" },
-  { name: "Дима", passport: "5", state: "registered" },
-  { name: "Дима", passport: "6", state: "registered" },
-  { name: "Дима", passport: "7", state: "registered" },
-  { name: "Дима", passport: "8", state: "registered" },
-];
+let voters = [];
 
 let keyRegistrar = {};
 
@@ -102,7 +93,6 @@ app.post("/addTimeStart", jsonParser, (req, res) => {
     },
     body: JSON.stringify(timeVot),
   });
-
   res.end();
 });
 

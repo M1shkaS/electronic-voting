@@ -82,6 +82,7 @@ app.get("/gettime", (req, res) => {
 app.post("/addTimeCon", jsonParser, (req, res) => {
   if (!req.body) return res.sendStatus(400);
   timeVot = req.body;
+  table = [];
   res.end();
 });
 
